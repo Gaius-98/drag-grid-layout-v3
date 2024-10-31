@@ -26,7 +26,6 @@ export const throttle = (func:Function, wait:number):(...args:any[])=>void => {
  */
 export const getElePosition = (el:HTMLElement):DgPositionPx =>{
     const {left,top,width,height}  = el.getBoundingClientRect()
-    console.log(left,top,width,height)
     return {
         left:left + 'px',
         top:top + 'px',
@@ -44,7 +43,6 @@ export const position2Grid = (posisitonInfo:DgPositionPx,
     const rowStart = Math.round(top/rowHeight)
     const colSpan = Math.round(width/colWidth)
     const rowSpan = Math.round(height/rowHeight)
-    console.log(height,rowHeight)
     return `
     ${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}
     `

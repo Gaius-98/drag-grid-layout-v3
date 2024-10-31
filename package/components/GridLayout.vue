@@ -50,7 +50,7 @@
     id: "",
   });
   const gridGap = computed(() => {
-    return `0 ${gap.value}px`;
+    return `${gap.value}px`;
   });
   const { list, gap, columns } = toRefs(props);
   const getItemStyle = (item) => {
@@ -77,14 +77,17 @@
   };
   const dgLayoutRef = ref();
   const dgLayoutVnode = ref();
-  const showShadow = ref(true);
+  const showShadow = ref(false);
   const onDrag = (event: MouseEvent) => {
     const startX = event.x;
     const startY = event.y;
     const { top, left, width, height } =
       dgLayoutVnode.value.getBoundingClientRect();
-    let newLeft = left;
-    let newTop = top;
+
+    const { top: pTop, left: PLeft } =
+      dgLayoutRef.value.getBoundingClientRect();
+    let newLeft = left - PLeft;
+    let newTop = top - pTop;
     showShadow.value = true;
     const move = (event: MouseEvent) => {
       const diffY = event.y - startY;
@@ -117,7 +120,7 @@
   };
 
   const getShadowStyle = computed(() => {
-    if (!dgLayoutRef.value) return;
+    if (!dgLayoutRef.value || !currentPosition.value.id) return;
     const { width: pWidth } = getElePosition(dgLayoutRef.value);
     const colWidth = parseInt(pWidth) / columns.value;
     const rowHeight = gap.value;
@@ -139,8 +142,8 @@
       display: grid;
       width: 100%;
       height: 100%;
-      gap: v-bind(gridGap);
-      grid-template-rows: repeat(auto-fill, v-bind(gap) + "px");
+      gap: 0 v-bind(gridGap);
+      grid-template-rows: repeat(auto-fill, v-bind(gridGap));
       grid-template-columns: repeat(v-bind(columns), 1fr);
       .dg-layout-item-shadow {
         background-color: #ccc;
