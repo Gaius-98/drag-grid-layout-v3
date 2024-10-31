@@ -82,3 +82,20 @@ export const compileGridInfo = (gridArea:string) =>{
     }
     
 }
+/**
+ * 检测两个元素是否重叠
+ * @param elem1 
+ * @param elem2 
+ * @returns 
+ */
+export const  isOverlapping = (elem1:HTMLElement, elem2:HTMLElement)=> {
+    const rect1 = elem1.getBoundingClientRect();
+    const rect2 = elem2.getBoundingClientRect();
+
+    return !(
+        rect1.top > rect2.bottom ||
+        rect1.bottom < rect2.top ||
+        rect1.left > rect2.right ||
+        rect1.right < rect2.left
+    );
+}
