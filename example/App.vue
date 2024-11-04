@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1000px; height: 600px">
+  <div style="width: 1200px; height: 600px">
     <grid-layout :list="list"> </grid-layout>
   </div>
 </template>

@@ -38,11 +38,14 @@ export const position2Grid = (posisitonInfo:DgPositionPx,
     gridInfo:DgGridInfo
 ) =>{
     const {left,top,width,height} = transformObjectStr(posisitonInfo)
+
     const {colWidth,rowHeight} = gridInfo
     const colStart = Math.round(left / colWidth)
+
     const rowStart = Math.round(top/rowHeight)
     const colSpan = Math.round(width/colWidth)
     const rowSpan = Math.round(height/rowHeight)
+
     return `
     ${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}
     `
@@ -74,8 +77,8 @@ export const compileGridInfo = (gridArea:string) =>{
         return {
             rowStart : match[1],
             colStart : match[2],
-            rowSpan :match[3],
-            colSpan :match[4],
+            rowSpan : match[3],
+            colSpan : match[4],
         }
     }else{
         console.warn(`请检查传入参数:${gridArea}`)
@@ -98,4 +101,26 @@ export const  isOverlapping = (elem1:HTMLElement, elem2:HTMLElement)=> {
         rect1.left > rect2.right ||
         rect1.right < rect2.left
     );
+}
+
+export const getRelativePosition = (el:HTMLElement) =>{
+  const parent = el.parentElement
+  const {left,top,width,height} = el.getBoundingClientRect()
+  if(parent){
+    const {left:pLeft,top:pTop} = parent?.getBoundingClientRect()
+    return {
+      left:left - pLeft,
+      top:top - pTop,
+      width,
+      height
+    }
+  }else{
+    return {
+      left,
+      top,
+      width,
+      height
+    }
+  }
+
 }
