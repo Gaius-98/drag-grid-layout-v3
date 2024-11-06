@@ -18,11 +18,9 @@
         class="dg-layout-item-shadow"
         :style="getShadowStyle"
         v-show="showShadow"
-        ref="shadowRef">
-        {{ currentPosition }}
-      </div>
+        ref="shadowRef"></div>
     </div>
-    <div class="dg-layout-indicator">
+    <div class="dg-layout-indicator" v-show="showShadow">
       <div v-for="item in columns" :key="item"></div>
     </div>
     <div
@@ -30,19 +28,30 @@
       :style="getVnodeStyle"
       ref="dgLayoutVnode"
       @mousedown.stop="onDrag($event)">
-      <div class="resize right-line" @mousedown.stop="onResize($event)"></div>
-      <div class="resize bottom-line" @mousedown.stop="onResize($event)"></div>
+      <div
+        class="resize left-line"
+        @mousedown.stop="onResize($event, 'horizontal', 'left')"></div>
+      <div
+        class="resize right-line"
+        @mousedown.stop="onResize($event, 'horizontal', 'right')"></div>
+      <div
+        class="resize top-line"
+        @mousedown.stop="onResize($event, 'vertical', 'top')"></div>
+      <div
+        class="resize bottom-line"
+        @mousedown.stop="onResize($event, 'vertical', 'bottom')"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, toRefs, ref, computed, StyleValue } from "vue";
+  import { reactive, toRefs, ref, computed, StyleValue, nextTick } from "vue";
   import {
     getElePosition,
     position2Grid,
     compileGridInfo,
     getRelativePosition,
+    getFirstCollision,
   } from "../utils";
   interface Props {
     list: any[];
@@ -71,21 +80,7 @@
       gridArea: `${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}`,
     };
   };
-  const getVnodeStyle = computed(() => {
-    const { left, top, width, height } = currentPosition.value;
-    if (!dgLayoutRef.value) {
-      return;
-    }
-    const { left: pLeft, top: pTop } = getElePosition(dgLayoutRef.value);
-    const realLeft = parseFloat(left) - parseFloat(pLeft);
-    const realTop = parseFloat(top) - parseFloat(pTop);
-    return {
-      width,
-      height,
-      top: realTop + "px",
-      left: realLeft + "px",
-    };
-  });
+
   const hoverItem = (e: MouseEvent, rawData: any) => {
     const elPosition = getElePosition(e.target as HTMLElement);
     currentPosition.value = {
@@ -116,6 +111,7 @@
         const { rowSpan, rowStart, colSpan, colStart } = compileGridInfo(
           getShadowStyle.value?.gridArea
         )!;
+
         let idx = list.value.findIndex((e) => e.id == currentPosition.value.id);
         if (idx != -1) {
           list.value[idx].rowSpan = rowSpan;
@@ -123,13 +119,16 @@
           list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
         }
-        const dom = document.querySelector(
-          `.dg-item-${currentPosition.value.id}`
-        ) as HTMLElement;
-        currentPosition.value = {
-          id: currentPosition.value.id,
-          ...getElePosition(dom),
-        };
+        nextTick(() => {
+          const dom = document.querySelector(
+            `.dg-item-${currentPosition.value.id}`
+          ) as HTMLElement;
+          console.log("drag");
+          currentPosition.value = {
+            id: currentPosition.value.id,
+            ...getElePosition(dom),
+          };
+        });
       }
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
@@ -137,22 +136,42 @@
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", up);
   };
-  const onResize = (event: MouseEvent) => {
+  const onResize = (
+    event: MouseEvent,
+    type: "vertical" | "horizontal",
+    dir: "top" | "left" | "bottom" | "right"
+  ) => {
     const startX = event.x;
     const startY = event.y;
-    const { left, top, width, height } = currentPosition.value;
+    const { width, height, left, top } = currentPosition.value;
     showShadow.value = true;
     const move = (event: MouseEvent) => {
       const diffY = event.y - startY;
       const diffX = event.x - startX;
-      const newWidth = parseFloat(width) + diffX;
-      const newHeight = parseFloat(height) + diffY;
-      currentPosition.value.width = newWidth + "px";
-      currentPosition.value.height = newHeight + "px";
+      if (type === "horizontal") {
+        if (dir === "left") {
+          const newLeft = parseFloat(left) + diffX;
+          currentPosition.value.left = newLeft + "px";
+          const newWidth = parseFloat(width) - diffX;
+          currentPosition.value.width = newWidth + "px";
+        } else {
+          const newWidth = parseFloat(width) + diffX;
+          currentPosition.value.width = newWidth + "px";
+        }
+      } else if (type === "vertical") {
+        if (dir === "top") {
+          const newTop = parseFloat(top) + diffY;
+          currentPosition.value.top = newTop + "px";
+          const newHeight = parseFloat(height) - diffY;
+          currentPosition.value.height = newHeight + "px";
+        } else {
+          const newHeight = parseFloat(height) + diffY;
+          currentPosition.value.height = newHeight + "px";
+        }
+      }
     };
     const up = (ev: MouseEvent) => {
       showShadow.value = false;
-
       if (getShadowStyle.value?.gridArea) {
         const { rowSpan, rowStart, colSpan, colStart } = compileGridInfo(
           getShadowStyle.value?.gridArea
@@ -164,13 +183,19 @@
           list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
         }
-        const dom = document.querySelector(
-          `.dg-item-${currentPosition.value.id}`
-        ) as HTMLElement;
-        currentPosition.value = {
-          id: currentPosition.value.id,
-          ...getElePosition(dom),
-        };
+        nextTick(() => {
+          const dom = document.querySelector(
+            `.dg-item-${currentPosition.value.id}`
+          ) as HTMLElement;
+          const { left, top, width, height } = getElePosition(dom);
+          currentPosition.value = {
+            left,
+            top,
+            width,
+            height,
+            id: currentPosition.value.id,
+          };
+        });
       }
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", up);
@@ -203,6 +228,21 @@
       ),
     };
   });
+  const getVnodeStyle = computed(() => {
+    const { left, top, width, height } = currentPosition.value;
+    if (!dgLayoutRef.value) {
+      return;
+    }
+    const { left: pLeft, top: pTop } = getElePosition(dgLayoutRef.value);
+    const realLeft = parseFloat(left) - parseFloat(pLeft);
+    const realTop = parseFloat(top) - parseFloat(pTop);
+    return {
+      width,
+      height,
+      top: realTop + "px",
+      left: realLeft + "px",
+    };
+  });
 </script>
 <style scoped lang="scss">
   .dg-layout {
@@ -215,6 +255,7 @@
       width: 100%;
       height: 100%;
       gap: 0 v-bind(gridGap);
+      grid-auto-rows: auto;
       grid-template-rows: repeat(auto-fill, v-bind(gridGap));
       grid-template-columns: repeat(v-bind(columns), 1fr);
       .dg-layout-item-shadow {
@@ -239,22 +280,60 @@
     .dg-layout-vnode {
       position: absolute;
       background-color: rgba(46, 116, 255, 0.15);
+      z-index: 99;
       .resize {
         position: absolute;
+        &::before {
+          display: block;
+          content: "";
+          background-color: #2e74ff;
+        }
         &.right-line {
           top: 0;
           right: 0;
           height: 100%;
           width: 3px;
-          background-color: #000;
           cursor: e-resize;
+          &::before {
+            content: "";
+            height: 100%;
+            width: 1px;
+            margin-left: 2px;
+          }
+        }
+        &.left-line {
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 3px;
+          cursor: e-resize;
+          &::before {
+            height: 100%;
+            width: 1px;
+          }
         }
         &.bottom-line {
           bottom: 0;
           left: 0;
           height: 3px;
           width: 100%;
-          background-color: #000;
+          cursor: n-resize;
+          &::before {
+            height: 1px;
+            margin-top: 2px;
+            width: 100%;
+          }
+        }
+        &.top-line {
+          top: 0;
+          left: 0;
+          height: 3px;
+          width: 100%;
+          cursor: n-resize;
+          &::before {
+            height: 1px;
+            width: 100%;
+          }
         }
       }
     }
