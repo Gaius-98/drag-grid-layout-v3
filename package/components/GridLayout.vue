@@ -6,9 +6,12 @@
         v-for="item in list"
         :key="item.key"
         :style="getItemStyle(item)"
-        :class="`dg-item-${item.id}`"
+        :class="[
+          `dg-item-${item.id}`,
+          currentPosition.id == item.id ? 'upper-levels' : '',
+        ]"
         @mouseenter="hoverItem($event, item)">
-        <slot>
+        <slot :item="item" name="layout-item">
           <div style="width: 100%; height: 100%">
             {{ item.id }}
           </div>
@@ -52,6 +55,7 @@
     compileGridInfo,
     getRelativePosition,
     getFirstCollision,
+    transformGrid,
   } from "../utils";
   interface Props {
     list: any[];
@@ -123,7 +127,6 @@
           const dom = document.querySelector(
             `.dg-item-${currentPosition.value.id}`
           ) as HTMLElement;
-          console.log("drag");
           currentPosition.value = {
             id: currentPosition.value.id,
             ...getElePosition(dom),
@@ -213,19 +216,35 @@
     const { left: pLeft, top: pTop } =
       dgLayoutRef.value.getBoundingClientRect();
     const { left, top, width, height } = currentPosition.value;
+    const { rowSpan, rowStart, colSpan, colStart } = transformGrid(
+      {
+        left: `${parseFloat(left) - pLeft}px`,
+        top: `${parseFloat(top) - pTop}px`,
+        width,
+        height,
+      },
+      {
+        rowHeight,
+        colWidth,
+      }
+    );
+    const shadowItem = {
+      id: currentPosition.value.id,
+      rowStart,
+      rowSpan,
+      colSpan,
+      colStart,
+    };
+    // console.log(list.value, shadowItem);
+    // console.log(getFirstCollision(list.value, shadowItem));
+    // const firstCollision = getFirstCollision(list.value, shadowItem);
+    // if (firstCollision) {
+    //   const { rowSpan, rowStart } = shadowItem;
+    //   const rawData = list.value.find((e) => e.id == firstCollision.id);
+    //   rawData.rowStart = rowSpan + rowStart;
+    // }
     return {
-      gridArea: position2Grid(
-        {
-          left: `${parseFloat(left) - pLeft}px`,
-          top: `${parseFloat(top) - pTop}px`,
-          width,
-          height,
-        },
-        {
-          rowHeight,
-          colWidth,
-        }
-      ),
+      gridArea: ` ${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}`,
     };
   });
   const getVnodeStyle = computed(() => {
@@ -260,6 +279,9 @@
       grid-template-columns: repeat(v-bind(columns), 1fr);
       .dg-layout-item-shadow {
         background-color: #ccc;
+      }
+      .upper-levels {
+        z-index: 99;
       }
     }
     .dg-layout-indicator {

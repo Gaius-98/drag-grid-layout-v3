@@ -37,20 +37,31 @@ export const getElePosition = (el:HTMLElement):DgPositionPx =>{
 export const position2Grid = (posisitonInfo:DgPositionPx,
     gridInfo:DgGridInfo
 ) =>{
-    const {left,top,width,height} = transformObjectStr(posisitonInfo)
 
-    const {colWidth,rowHeight} = gridInfo
-    const colStart = Math.round(left / colWidth) + 1
-    const rowStart = Math.round(top/rowHeight) + 1
-    const colSpan = Math.round(width/colWidth)
-    const rowSpan = Math.round(height/rowHeight)
 
+    const {rowStart,rowSpan,colSpan,colStart}  = transformGrid(posisitonInfo,gridInfo)
     return `
     ${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}
     `
 }
 
 
+export const transformGrid = (posisitonInfo:DgPositionPx,
+    gridInfo:DgGridInfo) =>{
+      const {left,top,width,height} = transformObjectStr(posisitonInfo)
+
+    const {colWidth,rowHeight} = gridInfo
+    const colStart = Math.round(left / colWidth) + 1
+    const rowStart = Math.round(top/rowHeight) + 1
+    const colSpan = Math.round(width/colWidth)
+    const rowSpan = Math.round(height/rowHeight)
+    return {
+      rowStart,
+      rowSpan,
+      colSpan,
+      colStart
+    }
+}
 
 export const transformObjectStr = (posisitonInfo:DgPositionPx):DgPosition =>{
     let obj:DgPosition = {
@@ -128,12 +139,12 @@ export const getRelativePosition = (el:HTMLElement) =>{
 
 
 export const collides = (l1: any, l2: any): boolean =>{
-  if (l1 === l2) return false; // same element
-  if (l1.rowStart + l1.rowSpan <= l2.rowStart) return false; // l1 is left of l2
-  if (l1.rowStart >= l2.rowStart + l2.rowSpan) return false; // l1 is right of l2
-  if (l1.colStart + l1.colSpan <= l2.colStart) return false; // l1 is above l2
-  if (l1.colStart >= l2.colStart + l2.colSpan) return false; // l1 is below l2
-  return true; // boxes overlap
+  if (l1.id === l2.id) return false; 
+  if (l1.rowStart + l1.rowSpan <= l2.rowStart) return false; 
+  if (l1.rowStart >= l2.rowStart + l2.rowSpan) return false; 
+  if (l1.colStart + l1.colSpan <= l2.colStart) return false; 
+  if (l1.colStart >= l2.colStart + l2.colSpan) return false;
+  return true; 
 }
 
 export const getFirstCollision = (list:any[],item:any) =>{
