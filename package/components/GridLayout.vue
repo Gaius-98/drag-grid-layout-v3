@@ -4,7 +4,7 @@
       <div
         class="dg-layout-item"
         v-for="item in list"
-        :key="item.key"
+        :key="item.id"
         :style="getItemStyle(item)"
         :class="[
           `dg-item-${item.id}`,
@@ -48,17 +48,18 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, toRefs, ref, computed, StyleValue, nextTick } from "vue";
-  import {
-    getElePosition,
-    position2Grid,
-    compileGridInfo,
-    getRelativePosition,
-    getFirstCollision,
-    transformGrid,
-  } from "../utils";
+  import { toRefs, ref, computed, nextTick } from "vue";
+  import { getElePosition, compileGridInfo, transformGrid } from "../utils";
+  interface DgNodeItem {
+    id: string | number;
+    rowStart: number;
+    colStart: number;
+    rowSpan: number;
+    colSpan: number;
+    [key: string]: any;
+  }
   interface Props {
-    list: any[];
+    list: DgNodeItem[];
     gap?: number;
     columns?: number;
   }
@@ -78,7 +79,7 @@
     return `${gap.value}px`;
   });
   const { list, gap, columns } = toRefs(props);
-  const getItemStyle = (item) => {
+  const getItemStyle = (item: DgNodeItem) => {
     const { rowSpan, rowStart, colSpan, colStart } = item;
     return {
       gridArea: `${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}`,
@@ -108,7 +109,7 @@
       currentPosition.value.left = newLeft + "px";
       currentPosition.value.top = newTop + "px";
     };
-    const up = (ev: MouseEvent) => {
+    const up = () => {
       showShadow.value = false;
 
       if (getShadowStyle.value?.gridArea) {
@@ -173,7 +174,7 @@
         }
       }
     };
-    const up = (ev: MouseEvent) => {
+    const up = () => {
       showShadow.value = false;
       if (getShadowStyle.value?.gridArea) {
         const { rowSpan, rowStart, colSpan, colStart } = compileGridInfo(
@@ -228,13 +229,7 @@
         colWidth,
       }
     );
-    const shadowItem = {
-      id: currentPosition.value.id,
-      rowStart,
-      rowSpan,
-      colSpan,
-      colStart,
-    };
+
     // console.log(list.value, shadowItem);
     // console.log(getFirstCollision(list.value, shadowItem));
     // const firstCollision = getFirstCollision(list.value, shadowItem);

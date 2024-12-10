@@ -20,7 +20,8 @@
 
 <script lang="ts" setup>
   import { GridLayout } from "../package/index";
-  import { reactive, toRefs, ref } from "vue";
+
+  import { ref } from "vue";
   const list = ref([
     {
       key: 1,

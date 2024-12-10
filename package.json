@@ -1,8 +1,28 @@
 {
   "name": "drag-grid-layout-v3",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "0.0.1",
+  "author": {
+      "name": "Gaius-98",
+      "email": "2388838628@qq.com"
+  },
+  "exports": {
+      ".": {
+          "import": "./lib/drag-grid-layout-v3.js"
+      },
+      "./lib/style.css": {
+          "import": "./lib/style.css"
+      }
+  },
+  "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+  },
+  "bugs": {
+      "url": "https://github.com/Gaius-98/drag-grid-layout-v3",
+      "email": "2388838628@qq.com"
+  },
   "type": "module",
+  "types":"./lib/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
@@ -10,6 +30,7 @@
   },
   "dependencies": {
     "sass": "^1.80.5",
+    "vite-plugin-dts": "^4.3.0",
     "vue": "^3.5.12"
   },
   "devDependencies": {
@@ -29,6 +50,5 @@
     "layout",
     "vue3"
   ],
-  "author": "Gaius-98",
   "license": "MIT"
 }
