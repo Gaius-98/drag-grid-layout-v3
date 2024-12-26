@@ -8,4 +8,5 @@ export default defineConfig({
     copyDtsFiles: false,
     tsconfigPath:'tsconfig.app.json'
   })],
+  base:'./'
 })
