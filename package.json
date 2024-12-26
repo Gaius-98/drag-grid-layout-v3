@@ -25,7 +25,8 @@
   "types":"./lib/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build:lib": "vue-tsc -b && vite build --config vite.config.lib.ts",
+    "build:example": "vue-tsc -b && vite build --config vite.config.example.ts",
     "preview": "vite preview"
   },
   "dependencies": {
