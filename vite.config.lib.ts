@@ -14,7 +14,8 @@ export default defineConfig({
     lib: {
       entry: './package/index.ts',
       formats:['es','umd'],
-      name:'drag-grid-layout-v3'
+      name:'drag-grid-layout-v3',
+      fileName: (format) => `drag-grid-layout-v3.${format}.js`
     },
     
     rollupOptions: {
