@@ -1,11 +1,15 @@
 {
   "name": "drag-grid-layout-v3",
   "private": false,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": {
       "name": "Gaius-98",
       "email": "2388838628@qq.com"
   },
+  "module": "lib/drag-grid-layout-v3.es.js",
+  "files": [
+      "lib/*"
+  ],
   "exports": {
       ".": {
           "import": "./lib/drag-grid-layout-v3.es.js",
@@ -42,7 +46,6 @@
     "vue-tsc": "^2.1.6"
   },
   "description": "drag-grid-layout-v3 是一个基于 Vue 3 的灵活拖拽网格布局组件，旨在简化内容布局和管理。该组件允许用户通过简单的拖拽操作，自由地调整和排列页面上的元素，支持响应式设计，能够自动适应不同屏幕尺寸。",
-  "main": "index.js",
   "directories": {
     "example": "example"
   },
