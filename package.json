@@ -1,14 +1,15 @@
 {
   "name": "drag-grid-layout-v3",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
       "name": "Gaius-98",
       "email": "2388838628@qq.com"
   },
   "exports": {
       ".": {
-          "import": "./lib/drag-grid-layout-v3.umd.js"
+          "import": "./lib/drag-grid-layout-v3.es.js",
+          "types":"./lib/index.d.ts"
       },
       "./lib/style.css": {
           "import": "./lib/style.css"
