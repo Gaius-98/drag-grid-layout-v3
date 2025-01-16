@@ -1,7 +1,7 @@
 {
   "name": "drag-grid-layout-v3",
   "private": false,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": {
       "name": "Gaius-98",
       "email": "2388838628@qq.com"
@@ -29,7 +29,7 @@
   "type": "module",
   "types":"./lib/index.d.ts",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --config vite.config.example.ts",
     "build:lib": "vue-tsc -b && vite build --config vite.config.lib.ts",
     "build:example": "vue-tsc -b && vite build --config vite.config.example.ts",
     "preview": "vite preview"
