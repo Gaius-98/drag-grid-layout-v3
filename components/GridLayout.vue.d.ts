@@ -9,6 +9,7 @@ interface DgNodeItem {
 interface Props {
     list: DgNodeItem[];
     gap?: number;
+    rowHeight?: number;
     columns?: number;
 }
 declare function __VLS_template(): {
@@ -16,16 +17,19 @@ declare function __VLS_template(): {
         "layout-item"?(_: {
             item: DgNodeItem;
         }): any;
+        "drag-handle"?(_: {}): any;
     };
     refs: {
         dgLayoutRef: HTMLDivElement;
         shadowRef: HTMLDivElement;
         dgLayoutVnode: HTMLDivElement;
+        VNodeContent: HTMLDivElement;
     };
     attrs: Partial<{}>;
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
 declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {}, string, import('vue').PublicProps, Readonly<Props> & Readonly<{}>, {
+    rowHeight: number;
     list: DgNodeItem[];
     gap: number;
     columns: number;
