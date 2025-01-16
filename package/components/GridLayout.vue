@@ -10,7 +10,7 @@
           `dg-item-${item.id}`,
           currentPosition.id == item.id ? 'upper-levels' : '',
         ]"
-        @click="onClickItem($event, item)">
+        @click.stop="onClickItem($event, item)">
         <slot :item="item" name="layout-item">
           <div style="width: 100%; height: 100%">
             {{ item.id }}
@@ -26,38 +26,34 @@
     <div class="dg-layout-indicator" v-show="showShadow">
       <div v-for="item in columns" :key="item"></div>
     </div>
-    <div class="dg-layout-vnode" :style="getVnodeStyle" ref="dgLayoutVnode">
+    <div
+      class="dg-layout-vnode"
+      :style="getVnodeStyle"
+      ref="dgLayoutVnode"
+      v-click-outside="onClickOutside"
+      v-if="isSelected">
       <div class="drag" @mousedown.stop="onDrag($event)">
         <slot name="drag-handle">
-          <svg
-            t="1737017923639"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            p-id="4419"
-            width="16"
-            height="16">
-            <path
-              d="M501.0944 1021.824c6.9376 2.8928 14.8224 2.8928 21.8112 0 3.4304-1.4336 6.528-3.4816 9.1136-6.0672 0.0256 0 0.0768-0.0256 0.0768-0.0256l158.9248-158.9248c11.1104-11.1104 11.1104-29.1328 0-40.2176-11.0848-11.0848-29.0816-11.0848-40.1664 0.0256l-110.4384 110.4128 0.0256-335.36c0-15.6928-12.7232-28.416-28.416-28.416s-28.416 12.6976-28.416 28.3904l0 335.3856-110.4128-110.4128c-11.1104-11.0848-29.1072-11.0848-40.1408 0-11.1104 11.1104-11.136 29.1072-0.0512 40.192l158.9504 158.9248c0.8192 0.8192 1.8944 1.1776 2.816 1.8688C496.7168 1019.1872 498.688 1020.8256 501.0944 1021.824z"
-              fill="#1296db"
-              p-id="4420"></path>
-            <path
-              d="M522.9056 2.176c-6.9376-2.8928-14.8224-2.8928-21.7856 0C497.6896 3.584 494.592 5.632 491.9808 8.2176c-0.0256 0-0.0768 0.0512-0.0768 0.0512L332.9792 167.168c-11.1104 11.1104-11.1104 29.1328 0 40.2176 11.0848 11.0848 29.0816 11.0848 40.1664-0.0256l110.4384-110.4128-0.0256 335.36c0 15.6928 12.7232 28.416 28.416 28.416 15.6928 0 28.4416-12.6976 28.4416-28.3904L540.416 96.9472l110.4128 110.4128c11.1104 11.0848 29.1072 11.0848 40.1408 0 11.1104-11.1104 11.1616-29.1072 0.0512-40.192l-158.9504-158.8992c-0.8192-0.8448-1.8944-1.2032-2.816-1.8944C527.2832 4.8128 525.312 3.1744 522.9056 2.176z"
-              fill="#1296db"
-              p-id="4421"></path>
-            <path
-              d="M1021.824 522.9056c2.8928-6.9376 2.8928-14.8224 0-21.8112-1.408-3.4304-3.456-6.528-6.0416-9.1136 0-0.0256-0.0512-0.0768-0.0512-0.0768l-158.8992-158.9248c-11.1104-11.1104-29.1584-11.1104-40.2432 0-11.0592 11.0848-11.0592 29.0816 0.0512 40.1664l110.3872 110.4384-335.36-0.0256c-15.6928 0-28.3904 12.7232-28.3904 28.416s12.6976 28.416 28.3904 28.416l335.36 0-110.3872 110.4128c-11.1104 11.1104-11.1104 29.1072 0 40.1408 11.1104 11.1104 29.1072 11.136 40.192 0.0512l158.8992-158.9504c0.8448-0.8192 1.2032-1.8944 1.8944-2.816C1019.1872 527.2832 1020.8256 525.312 1021.824 522.9056z"
-              fill="#1296db"
-              p-id="4422"></path>
-            <path
-              d="M2.176 501.0944c-2.8928 6.9376-2.8928 14.8224 0 21.7856 1.408 3.456 3.456 6.5536 6.0416 9.1392l0.0512 0.0512 158.8992 158.9504c11.1104 11.1104 29.1584 11.1104 40.2432 0 11.0592-11.1104 11.0592-29.1072-0.0512-40.192l-110.3872-110.4384 335.36 0.0512c15.6928 0 28.3904-12.7488 28.3904-28.416 0-15.6928-12.6976-28.4416-28.3904-28.4416l-335.36 0.0256 110.3872-110.4128c11.1104-11.1104 11.1104-29.1072 0-40.1408-11.1104-11.1104-29.1072-11.1616-40.192-0.0512l-158.8992 158.9504c-0.8448 0.8192-1.2032 1.8944-1.8944 2.816C4.8128 496.7168 3.1744 498.688 2.176 501.0944z"
-              fill="#1296db"
-              p-id="4423"></path>
-          </svg>
+          <div class="drag-handle">
+            <svg
+              t="1737028889311"
+              class="icon"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="4464"
+              width="16"
+              height="16">
+              <path
+                d="M219.428571 585.142857c-36.571429 0-73.142857 36.571429-73.142857 73.142857s36.571429 73.142857 73.142857 73.142857 73.142857-36.571429 73.142858-73.142857-36.571429-73.142857-73.142858-73.142857z m585.142858-146.285714c36.571429 0 73.142857-36.571429 73.142857-73.142857s-36.571429-73.142857-73.142857-73.142857-73.142857 36.571429-73.142858 73.142857 36.571429 73.142857 73.142858 73.142857zM219.428571 292.571429c-36.571429 0-73.142857 36.571429-73.142857 73.142857s36.571429 73.142857 73.142857 73.142857 73.142857-36.571429 73.142858-73.142857-36.571429-73.142857-73.142858-73.142857z m585.142858 292.571428c-36.571429 0-73.142857 36.571429-73.142858 73.142857s36.571429 73.142857 73.142858 73.142857 73.142857-36.571429 73.142857-73.142857-36.571429-73.142857-73.142857-73.142857zM512 292.571429c-36.571429 0-73.142857 36.571429-73.142857 73.142857s36.571429 73.142857 73.142857 73.142857 73.142857-36.571429 73.142857-73.142857-36.571429-73.142857-73.142857-73.142857z m0 292.571428c-36.571429 0-73.142857 36.571429-73.142857 73.142857s36.571429 73.142857 73.142857 73.142857 73.142857-36.571429 73.142857-73.142857-36.571429-73.142857-73.142857-73.142857z"
+                p-id="4465"></path>
+            </svg>
+          </div>
         </slot>
       </div>
-      <div class="vnode-content" ref="VNodeContent"></div>
+      <slot>
+        <div class="vnode-content"></div>
+      </slot>
       <div
         class="resize left-line"
         @mousedown.stop="onResize($event, 'horizontal', 'left')"></div>
@@ -77,6 +73,8 @@
 <script lang="ts" setup>
   import { toRefs, ref, computed, nextTick } from "vue";
   import { getElePosition, compileGridInfo, transformGrid } from "../utils";
+  import { clickOutside } from "../utils/direatives";
+  const vClickOutside = clickOutside;
   interface DgNodeItem {
     id: string | number;
     rowStart: number;
@@ -111,20 +109,23 @@
     return `${rowHeight.value}px`;
   });
   const { list, gap, columns, rowHeight } = toRefs(props);
-  let cloneDom;
   const getItemStyle = (item: DgNodeItem) => {
     const { rowSpan, rowStart, colSpan, colStart } = item;
     return {
       gridArea: `${rowStart} / ${colStart} / span ${rowSpan} / span ${colSpan}`,
     };
   };
-  const VNodeContent = ref();
-
+  const isSelected = ref(false);
+  const onClickOutside = () => {
+    console.log("clickoutside");
+    if (isSelected.value) {
+      isSelected.value = false;
+    }
+  };
   const onClickItem = (e: MouseEvent, rawData: any) => {
     const elPosition = getElePosition(e.target as HTMLElement);
-    cloneDom = (e.target as HTMLElement)?.cloneNode(true) as HTMLElement;
-    VNodeContent.value.innerHTML = "";
-    VNodeContent.value.appendChild(cloneDom);
+    isSelected.value = true;
+    console.log("item");
     currentPosition.value = {
       ...elPosition,
       id: rawData.id,
@@ -396,12 +397,21 @@
       }
       .drag {
         position: absolute;
-        right: 0;
+        left: 50%;
         top: 0;
-        width: 20px;
-        height: 10px;
+        transform: translate(-50%, -50%);
+        width: 30px;
+        height: 15px;
         border-radius: 5px;
         cursor: grab;
+        z-index: 99;
+        .drag-handle {
+          width: 100%;
+          height: 100%;
+          background-color: #fff;
+          border-radius: 5px;
+          text-align: center;
+        }
       }
     }
   }
