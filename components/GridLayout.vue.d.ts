@@ -18,12 +18,12 @@ declare function __VLS_template(): {
             item: DgNodeItem;
         }): any;
         "drag-handle"?(_: {}): any;
+        default?(_: {}): any;
     };
     refs: {
         dgLayoutRef: HTMLDivElement;
         shadowRef: HTMLDivElement;
         dgLayoutVnode: HTMLDivElement;
-        VNodeContent: HTMLDivElement;
     };
     attrs: Partial<{}>;
 };
