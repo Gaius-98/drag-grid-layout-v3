@@ -28,7 +28,11 @@ declare function __VLS_template(): {
     attrs: Partial<{}>;
 };
 type __VLS_TemplateResult = ReturnType<typeof __VLS_template>;
-declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {}, string, import('vue').PublicProps, Readonly<Props> & Readonly<{}>, {
+declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, {}, import('vue').ComponentOptionsMixin, import('vue').ComponentOptionsMixin, {
+    "item:click": (...args: any[]) => void;
+}, string, import('vue').PublicProps, Readonly<Props> & Readonly<{
+    "onItem:click"?: ((...args: any[]) => any) | undefined;
+}>, {
     rowHeight: number;
     list: DgNodeItem[];
     gap: number;
