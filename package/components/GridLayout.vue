@@ -95,6 +95,7 @@
     rowHeight: 10,
     columns: 12,
   });
+  const emits = defineEmits(["item:click"]);
   const currentPosition = ref({
     left: "0",
     top: "0",
@@ -117,7 +118,6 @@
   };
   const isSelected = ref(false);
   const onClickOutside = () => {
-    console.log("clickoutside");
     if (isSelected.value) {
       isSelected.value = false;
     }
@@ -125,11 +125,11 @@
   const onClickItem = (e: MouseEvent, rawData: any) => {
     const elPosition = getElePosition(e.target as HTMLElement);
     isSelected.value = true;
-    console.log("item");
     currentPosition.value = {
       ...elPosition,
       id: rawData.id,
     };
+    emits("item:click", rawData);
   };
   const dgLayoutRef = ref();
   const dgLayoutVnode = ref();
