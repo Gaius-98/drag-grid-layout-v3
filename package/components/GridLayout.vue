@@ -162,7 +162,6 @@
           list.value[idx].rowStart = rowStart;
           list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
-          emits("item:change", list.value[idx]);
         }
         nextTick(() => {
           const dom = document.querySelector(
@@ -172,6 +171,7 @@
             id: currentPosition.value.id,
             ...getElePosition(dom),
           };
+          emits("item:change", list.value[idx]);
         });
       }
       document.removeEventListener("mousemove", move);
@@ -226,7 +226,6 @@
           list.value[idx].rowStart = rowStart;
           list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
-          emits("item:change", list.value[idx]);
         }
         nextTick(() => {
           const dom = document.querySelector(
@@ -240,6 +239,7 @@
             height,
             id: currentPosition.value.id,
           };
+          emits("item:change", list.value[idx]);
         });
       }
       document.removeEventListener("mousemove", move);
