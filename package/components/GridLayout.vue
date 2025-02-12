@@ -10,7 +10,7 @@
           `dg-item-${item.id}`,
           currentPosition.id == item.id ? 'upper-levels' : '',
         ]"
-        @click.stop="onClickItem($event, item)">
+        @click.stop="onClickItem(item)">
         <slot :item="item" name="layout-item">
           <div style="width: 100%; height: 100%">
             {{ item.id }}
@@ -95,7 +95,7 @@
     rowHeight: 10,
     columns: 12,
   });
-  const emits = defineEmits(["item:click"]);
+  const emits = defineEmits(["item:click", "item:change"]);
   const currentPosition = ref({
     left: "0",
     top: "0",
@@ -122,8 +122,9 @@
       isSelected.value = false;
     }
   };
-  const onClickItem = (e: MouseEvent, rawData: any) => {
-    const elPosition = getElePosition(e.target as HTMLElement);
+  const onClickItem = (rawData: any) => {
+    const node = document.querySelector(`.dg-item-${rawData.id}`);
+    const elPosition = getElePosition(node as HTMLElement);
     isSelected.value = true;
     currentPosition.value = {
       ...elPosition,
@@ -161,6 +162,7 @@
           list.value[idx].rowStart = rowStart;
           list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
+          emits("item:change", list.value[idx]);
         }
         nextTick(() => {
           const dom = document.querySelector(
@@ -224,6 +226,7 @@
           list.value[idx].rowStart = rowStart;
           list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
+          emits("item:change", list.value[idx]);
         }
         nextTick(() => {
           const dom = document.querySelector(
