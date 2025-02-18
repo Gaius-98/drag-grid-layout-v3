@@ -31,7 +31,7 @@
       :style="getVnodeStyle"
       ref="dgLayoutVnode"
       v-click-outside="onClickOutside"
-      v-if="isSelected">
+      v-if="isSelected && !readonly">
       <div class="drag" @mousedown.stop="onDrag($event)">
         <slot name="drag-handle">
           <div class="drag-handle">
@@ -88,12 +88,14 @@
     gap?: number;
     rowHeight?: number;
     columns?: number;
+    readonly?: boolean;
   }
   const props = withDefaults(defineProps<Props>(), {
     list: () => [],
     gap: 8,
     rowHeight: 10,
     columns: 12,
+    readonly: false,
   });
   const emits = defineEmits(["item:click", "item:change"]);
   const currentPosition = ref({
@@ -109,7 +111,7 @@
   const rowHeightPx = computed(() => {
     return `${rowHeight.value}px`;
   });
-  const { list, gap, columns, rowHeight } = toRefs(props);
+  const { list, gap, columns, rowHeight, readonly } = toRefs(props);
   const getItemStyle = (item: DgNodeItem) => {
     const { rowSpan, rowStart, colSpan, colStart } = item;
     return {
@@ -123,6 +125,7 @@
     }
   };
   const onClickItem = (rawData: any) => {
+    if (readonly.value) return;
     const node = document.querySelector(`.dg-item-${rawData.id}`);
     const elPosition = getElePosition(node as HTMLElement);
     isSelected.value = true;
@@ -136,6 +139,7 @@
   const dgLayoutVnode = ref();
   const showShadow = ref(false);
   const onDrag = (event: MouseEvent) => {
+    if (readonly.value) return;
     const startX = event.x;
     const startY = event.y;
     const { left, top } = currentPosition.value;
@@ -185,6 +189,7 @@
     type: "vertical" | "horizontal",
     dir: "top" | "left" | "bottom" | "right"
   ) => {
+    if (readonly.value) return;
     const startX = event.x;
     const startY = event.y;
     const { width, height, left, top } = currentPosition.value;

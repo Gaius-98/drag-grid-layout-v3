@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%; height: 800px">
-    <grid-layout :list="list">
+    <grid-layout :list="list" :readonly="true">
       <template #layout-item="{ item }">
         <div
           :style="{
