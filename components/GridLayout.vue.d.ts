@@ -11,6 +11,7 @@ interface Props {
     gap?: number;
     rowHeight?: number;
     columns?: number;
+    readonly?: boolean;
 }
 declare function __VLS_template(): {
     slots: {
@@ -39,6 +40,7 @@ declare const __VLS_component: import('vue').DefineComponent<Props, {}, {}, {}, 
     list: DgNodeItem[];
     gap: number;
     columns: number;
+    readonly: boolean;
 }, {}, {}, {}, string, import('vue').ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
 export default _default;
