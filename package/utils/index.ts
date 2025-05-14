@@ -52,9 +52,10 @@ export const transformGrid = (posisitonInfo:DgPositionPx,
 
     const {colWidth,rowHeight} = gridInfo
     const colStart = Math.floor(left / colWidth) + 1
-    const rowStart = Math.floor(top/rowHeight) + 1
+    const rowStart = Math.round(top/rowHeight) + 1
     const colSpan = Math.round(width/colWidth)
     const rowSpan = Math.round(height/rowHeight)
+    
     return {
       rowStart,
       rowSpan,

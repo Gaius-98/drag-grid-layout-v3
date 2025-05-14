@@ -147,6 +147,7 @@
     const move = (event: MouseEvent) => {
       const diffY = event.y - startY;
       const diffX = event.x - startX;
+
       const newLeft = parseFloat(left) + diffX;
       const newTop = parseFloat(top) + diffY;
       currentPosition.value.left = newLeft + "px";
@@ -162,9 +163,9 @@
 
         let idx = list.value.findIndex((e) => e.id == currentPosition.value.id);
         if (idx != -1) {
-          list.value[idx].rowSpan = rowSpan;
+          // list.value[idx].rowSpan = rowSpan;
           list.value[idx].rowStart = rowStart;
-          list.value[idx].colSpan = colSpan;
+          // list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
         }
         nextTick(() => {
@@ -262,9 +263,10 @@
     const { left: pLeft, top: pTop } =
       dgLayoutRef.value.getBoundingClientRect();
     const { left, top, width, height } = currentPosition.value;
+
     const { rowSpan, rowStart, colSpan, colStart } = transformGrid(
       {
-        left: `${parseFloat(left) - pLeft}px`,
+        left: left,
         top: `${parseFloat(top) - pTop}px`,
         width,
         height,

@@ -1,6 +1,9 @@
 <template>
+  <div class="text">
+    {{ list }}
+  </div>
   <div style="width: 100%; height: 800px">
-    <grid-layout :list="list" :readonly="true">
+    <grid-layout :list="list">
       <template #layout-item="{ item }">
         <div
           :style="{
@@ -12,9 +15,6 @@
         </div>
       </template>
     </grid-layout>
-  </div>
-  <div class="text">
-    {{ list }}
   </div>
 </template>
 
@@ -69,4 +69,3 @@
     },
   ]);
 </script>
-<style scoped></style>
