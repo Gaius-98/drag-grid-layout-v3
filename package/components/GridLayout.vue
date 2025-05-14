@@ -163,9 +163,9 @@
 
         let idx = list.value.findIndex((e) => e.id == currentPosition.value.id);
         if (idx != -1) {
-          // list.value[idx].rowSpan = rowSpan;
+          list.value[idx].rowSpan = rowSpan;
           list.value[idx].rowStart = rowStart;
-          // list.value[idx].colSpan = colSpan;
+          list.value[idx].colSpan = colSpan;
           list.value[idx].colStart = colStart;
         }
         nextTick(() => {
@@ -266,7 +266,7 @@
 
     const { rowSpan, rowStart, colSpan, colStart } = transformGrid(
       {
-        left: left,
+        left: `${parseFloat(left) - pLeft}px`,
         top: `${parseFloat(top) - pTop}px`,
         width,
         height,
